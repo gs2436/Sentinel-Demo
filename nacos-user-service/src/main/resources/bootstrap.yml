@@ -1,0 +1,17 @@
+server:
+  port: 8402
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: dev
+        #        group: DEFAULT_GROUP
+        file-extension: yml
+  profiles:
+    active: dev

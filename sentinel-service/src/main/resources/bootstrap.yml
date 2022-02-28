@@ -1,0 +1,68 @@
+server:
+  port: 8401
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: dev
+#        group: DEFAULT_GROUP
+        file-extension: yml
+    sentinel:
+      transport:
+        # 配置Sentinel dashborad地址
+        dashboard: http://localhost:8080
+        port: 8719
+      # 取消延迟加载（默认是延迟加载的）
+      eager: true
+      # 见类：SentinelProperties
+      datasource:
+        ds1:
+          nacos:
+            # 配置nacos地址
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+            namespace: dev
+            data-id: sentinel-config
+            group-id: DEFAULT_GROUP
+            data-type: json
+            # com.alibaba.cloud.sentinel.datasource.RuleType
+            rule-type: degrade
+        ds2:
+          # 见类：DataSourcePropertiesConfiguration
+          nacos:
+            # 配置nacos地址
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+            namespace: dev
+            data-id: sentinel-config-paramFlow
+            group-id: DEFAULT_GROUP
+            data-type: json
+            # com.alibaba.cloud.sentinel.datasource.RuleType
+            rule-type: param-flow
+        ds3:
+          nacos:
+            # 配置nacos地址
+            server-addr: ${spring.cloud.nacos.discovery.server-addr}
+            namespace: dev
+            data-id: sentinel-config-system
+            group-id: DEFAULT_GROUP
+            data-type: json
+            # com.alibaba.cloud.sentinel.datasource.RuleType
+            rule-type: system
+  profiles:
+    active: dev
+
+# 打开feign对sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
